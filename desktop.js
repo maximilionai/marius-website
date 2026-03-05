@@ -276,6 +276,27 @@ document.querySelector('#apple-dropdown .dropdown-item')?.addEventListener('clic
   bringToFront(win);
 });
 
+// === Eyeball Tracking ===
+document.addEventListener('mousemove', (e) => {
+  const pupils = [document.getElementById('pupil-left'), document.getElementById('pupil-right')];
+  pupils.forEach(pupil => {
+    if (!pupil) return;
+    const eye = pupil.parentElement;
+    const rect = eye.getBoundingClientRect();
+    const eyeCenterX = rect.left + rect.width / 2;
+    const eyeCenterY = rect.top + rect.height / 2;
+    const dx = e.clientX - eyeCenterX;
+    const dy = e.clientY - eyeCenterY;
+    const angle = Math.atan2(dy, dx);
+    const dist = Math.min(Math.sqrt(dx * dx + dy * dy), 100);
+    const maxMove = 3.5;
+    const move = (dist / 100) * maxMove;
+    const px = Math.cos(angle) * move;
+    const py = Math.sin(angle) * move;
+    pupil.style.transform = `translate(calc(-50% + ${px}px), calc(-50% + ${py}px))`;
+  });
+});
+
 // === Close menu on click outside ===
 document.addEventListener('click', (e) => {
   if (!e.target.closest('#menubar')) {
