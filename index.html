@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marius - Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Chicago&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Menu Bar -->
+  <div id="menubar">
+    <div class="menu-item" id="apple-menu">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M11.2 0c.1.9-.3 1.8-.8 2.4-.6.7-1.5 1.2-2.4 1.1-.1-.9.3-1.8.9-2.4C9.5.4 10.5 0 11.2 0zm3 5.5c-.1.1-1.8 1-1.8 3.1 0 2.4 2.1 3.2 2.2 3.2 0 .1-.3 1.2-1.1 2.3-.7 1-1.4 2-2.5 2s-1.4-.7-2.6-.7c-1.3 0-1.7.7-2.7.7s-1.7-.9-2.5-2C2.1 12.2 1 9.5 1 7c0-2.7 1.8-4.2 3.5-4.2 1 0 1.8.7 2.4.7.6 0 1.5-.7 2.7-.7.5 0 2 .1 3 1.3l.6.4z' fill='black'/%3E%3C/svg%3E" alt="Apple" class="apple-logo">
+      <div class="dropdown" id="apple-dropdown">
+        <div class="dropdown-item">About This Mac</div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item disabled">System Preferences...</div>
+        <div class="dropdown-item disabled">App Store...</div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item disabled">Recent Items</div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item disabled">Force Quit...</div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item disabled">Sleep</div>
+        <div class="dropdown-item disabled">Restart...</div>
+        <div class="dropdown-item disabled">Shut Down...</div>
+      </div>
+    </div>
+    <div class="menu-item active-app"><strong>Finder</strong></div>
+    <div class="menu-item">File</div>
+    <div class="menu-item">Edit</div>
+    <div class="menu-item">View</div>
+    <div class="menu-item">Special</div>
+    <div class="menu-item">Help</div>
+    <div class="menubar-right">
+      <span id="menubar-clock"></span>
+    </div>
+  </div>
+
+  <!-- Desktop -->
+  <div id="desktop">
+    <!-- Desktop Icons -->
+    <div class="desktop-icon" data-file="photo1" style="top: 20px; right: 20px;">
+      <div class="icon-image">
+        <img src="images/thumb_landscape.jpg" alt="Landscape">
+      </div>
+      <span class="icon-label">Landscape.jpg</span>
+    </div>
+
+    <div class="desktop-icon" data-file="photo2" style="top: 120px; right: 20px;">
+      <div class="icon-image">
+        <img src="images/thumb_portrait.jpg" alt="Portrait">
+      </div>
+      <span class="icon-label">Portrait.jpg</span>
+    </div>
+
+    <div class="desktop-icon" data-file="photo3" style="top: 220px; right: 20px;">
+      <div class="icon-image">
+        <img src="images/thumb_street.jpg" alt="Street">
+      </div>
+      <span class="icon-label">Street.jpg</span>
+    </div>
+
+    <div class="desktop-icon" data-file="photo4" style="top: 320px; right: 20px;">
+      <div class="icon-image">
+        <img src="images/thumb_nature.jpg" alt="Nature">
+      </div>
+      <span class="icon-label">Nature.jpg</span>
+    </div>
+
+    <div class="desktop-icon" data-file="photo5" style="top: 420px; right: 20px;">
+      <div class="icon-image">
+        <img src="images/thumb_architecture.jpg" alt="Architecture">
+      </div>
+      <span class="icon-label">Architecture.jpg</span>
+    </div>
+
+    <div class="desktop-icon" data-file="about" style="top: 20px; left: 20px;">
+      <div class="icon-image folder-icon">
+        <svg viewBox="0 0 48 48" width="48" height="48">
+          <path d="M4 8h16l4 4h20v28H4V8z" fill="#f9d77e" stroke="#8b7332" stroke-width="1.5"/>
+          <path d="M4 14h40v26H4z" fill="#f9d77e" stroke="#8b7332" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <span class="icon-label">About Marius</span>
+    </div>
+
+    <div class="desktop-icon" data-file="contact" style="top: 120px; left: 20px;">
+      <div class="icon-image document-icon">
+        <svg viewBox="0 0 48 48" width="48" height="48">
+          <path d="M8 4h22l10 10v30H8V4z" fill="white" stroke="#333" stroke-width="1.5"/>
+          <path d="M30 4v10h10" fill="#ddd" stroke="#333" stroke-width="1.5"/>
+          <line x1="14" y1="22" x2="34" y2="22" stroke="#333" stroke-width="1"/>
+          <line x1="14" y1="28" x2="34" y2="28" stroke="#333" stroke-width="1"/>
+          <line x1="14" y1="34" x2="28" y2="34" stroke="#333" stroke-width="1"/>
+        </svg>
+      </div>
+      <span class="icon-label">Contact.txt</span>
+    </div>
+
+    <div class="desktop-icon" data-file="trash" style="bottom: 20px; right: 20px;">
+      <div class="icon-image trash-icon">
+        <svg viewBox="0 0 48 48" width="48" height="48">
+          <path d="M12 16h24v24c0 2-2 4-4 4H16c-2 0-4-2-4-4V16z" fill="#ccc" stroke="#666" stroke-width="1.5"/>
+          <path d="M10 12h28v4H10z" fill="#ccc" stroke="#666" stroke-width="1.5"/>
+          <path d="M18 12V8h12v4" fill="none" stroke="#666" stroke-width="1.5"/>
+          <line x1="18" y1="20" x2="18" y2="38" stroke="#999" stroke-width="1.5"/>
+          <line x1="24" y1="20" x2="24" y2="38" stroke="#999" stroke-width="1.5"/>
+          <line x1="30" y1="20" x2="30" y2="38" stroke="#999" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <span class="icon-label">Trash</span>
+    </div>
+  </div>
+
+  <!-- About This Mac Window (hidden by default) -->
+  <div class="window" id="about-mac-window" style="display:none; width:400px; top:100px; left:200px;">
+    <div class="window-titlebar">
+      <div class="window-close" onclick="closeWindow('about-mac-window')"></div>
+      <span class="window-title">About This Mac</span>
+    </div>
+    <div class="window-content" style="text-align:center; padding:20px;">
+      <svg viewBox="0 0 48 48" width="64" height="64" style="margin-bottom:10px;">
+        <path d="M11.2 0c.1.9-.3 1.8-.8 2.4-.6.7-1.5 1.2-2.4 1.1-.1-.9.3-1.8.9-2.4C9.5.4 10.5 0 11.2 0zm3 5.5c-.1.1-1.8 1-1.8 3.1 0 2.4 2.1 3.2 2.2 3.2 0 .1-.3 1.2-1.1 2.3-.7 1-1.4 2-2.5 2s-1.4-.7-2.6-.7c-1.3 0-1.7.7-2.7.7s-1.7-.9-2.5-2C2.1 12.2 1 9.5 1 7c0-2.7 1.8-4.2 3.5-4.2 1 0 1.8.7 2.4.7.6 0 1.5-.7 2.7-.7.5 0 2 .1 3 1.3l.6.4z" fill="black" transform="translate(10,4) scale(2)"/>
+      </svg>
+      <h2 style="margin:0; font-size:16px;">Marius OS</h2>
+      <p style="margin:5px 0; font-size:12px;">Version 1.0</p>
+      <hr style="border:1px solid #999; margin:10px 0;">
+      <p style="font-size:11px; color:#333;">
+        A portfolio by <strong>Marius</strong><br>
+        Built with love and nostalgia<br><br>
+        Photographer &middot; Creative &middot; Dreamer
+      </p>
+    </div>
+  </div>
+
+  <!-- About Marius Window -->
+  <div class="window" id="about-window" style="display:none; width:480px; top:80px; left:120px;">
+    <div class="window-titlebar">
+      <div class="window-close" onclick="closeWindow('about-window')"></div>
+      <span class="window-title">About Marius</span>
+      <div class="window-zoom" onclick="toggleZoom('about-window')"></div>
+    </div>
+    <div class="window-content" style="padding:20px;">
+      <h2 style="margin:0 0 10px 0; font-size:18px;">Hello, I'm Marius.</h2>
+      <p style="font-size:13px; line-height:1.6;">
+        I'm a photographer and creative based in Germany. I love capturing moments
+        that tell stories -- from sweeping landscapes to quiet street corners.
+      </p>
+      <p style="font-size:13px; line-height:1.6;">
+        Double-click the photos on the desktop to explore my work.
+        Feel free to drag them around just like a real desktop.
+      </p>
+      <p style="font-size:13px; line-height:1.6;">
+        This portfolio is an homage to the classic Macintosh -- the machine that
+        started it all for creative professionals everywhere.
+      </p>
+    </div>
+  </div>
+
+  <!-- Contact Window -->
+  <div class="window" id="contact-window" style="display:none; width:400px; top:120px; left:180px;">
+    <div class="window-titlebar">
+      <div class="window-close" onclick="closeWindow('contact-window')"></div>
+      <span class="window-title">Contact.txt</span>
+      <div class="window-zoom" onclick="toggleZoom('contact-window')"></div>
+    </div>
+    <div class="window-content notepad" style="padding:15px; font-family:'Courier New', monospace; font-size:13px; line-height:1.8;">
+      ==========================================<br>
+      &nbsp;&nbsp;CONTACT MARIUS<br>
+      ==========================================<br>
+      <br>
+      Email: &nbsp;&nbsp; hello@marius.com<br>
+      Web: &nbsp;&nbsp;&nbsp;&nbsp; marius.maximilion.ai<br>
+      Instagram: @marius<br>
+      <br>
+      ------------------------------------------<br>
+      &nbsp;&nbsp;Available for collaborations,<br>
+      &nbsp;&nbsp;commissions, and coffee.<br>
+      ------------------------------------------<br>
+    </div>
+  </div>
+
+  <!-- Image Preview Windows (created dynamically) -->
+  <template id="image-window-template">
+    <div class="window image-window">
+      <div class="window-titlebar">
+        <div class="window-close"></div>
+        <span class="window-title"></span>
+        <div class="window-zoom"></div>
+      </div>
+      <div class="window-content image-content">
+        <img src="" alt="">
+      </div>
+    </div>
+  </template>
+
+  <!-- Startup overlay -->
+  <div id="startup-overlay">
+    <div id="startup-content">
+      <svg viewBox="0 0 48 48" width="80" height="80" style="margin-bottom:20px;">
+        <path d="M11.2 0c.1.9-.3 1.8-.8 2.4-.6.7-1.5 1.2-2.4 1.1-.1-.9.3-1.8.9-2.4C9.5.4 10.5 0 11.2 0zm3 5.5c-.1.1-1.8 1-1.8 3.1 0 2.4 2.1 3.2 2.2 3.2 0 .1-.3 1.2-1.1 2.3-.7 1-1.4 2-2.5 2s-1.4-.7-2.6-.7c-1.3 0-1.7.7-2.7.7s-1.7-.9-2.5-2C2.1 12.2 1 9.5 1 7c0-2.7 1.8-4.2 3.5-4.2 1 0 1.8.7 2.4.7.6 0 1.5-.7 2.7-.7.5 0 2 .1 3 1.3l.6.4z" fill="white" transform="translate(10,4) scale(2)"/>
+      </svg>
+      <div id="startup-progress">
+        <div id="startup-progress-bar"></div>
+      </div>
+      <p id="startup-text">Starting up...</p>
+    </div>
+  </div>
+
+  <script src="desktop.js"></script>
+</body>
+</html>
