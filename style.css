@@ -70,35 +70,37 @@ body {
 
 /* === Eyeballs === */
 #eyeballs {
-  position: absolute;
+  position: fixed;
   left: 50%;
+  top: 0;
+  height: 24px;
   transform: translateX(-50%);
   display: flex;
-  gap: 3px;
-  height: 100%;
+  gap: 4px;
   align-items: center;
+  z-index: 10002;
+  pointer-events: none;
 }
 
 .eyeball {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   background: #fff;
-  border: 1.5px solid #000;
+  border: 2px solid #000;
   border-radius: 50%;
   position: relative;
   overflow: hidden;
 }
 
 .pupil {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   background: #000;
   border-radius: 50%;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  transition: transform 0.05s ease-out;
 }
 
 /* Dropdown */
@@ -166,27 +168,6 @@ body {
       rgba(0,0,0,0.03) 2px
     ),
     #6699cc;
-}
-
-/* === Face Background === */
-#face-bg {
-  position: absolute;
-  bottom: -5%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  max-width: 500px;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.18;
-  mix-blend-mode: multiply;
-}
-
-#face-bg img {
-  width: 100%;
-  height: auto;
-  display: block;
-  filter: grayscale(100%) contrast(1.3);
 }
 
 /* === Desktop Icons === */
