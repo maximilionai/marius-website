@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Marius - Portfolio</title>
-  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="style.css?v=3">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Chicago&display=swap" rel="stylesheet">
 </head>
@@ -108,6 +108,17 @@
       <span class="icon-label">Contact.txt</span>
     </div>
 
+    <div class="desktop-icon" data-file="impressum" style="top: 220px; left: 20px;">
+      <div class="icon-image document-icon">
+        <svg viewBox="0 0 48 48" width="48" height="48">
+          <path d="M8 4h22l10 10v30H8V4z" fill="white" stroke="#333" stroke-width="1.5"/>
+          <path d="M30 4v10h10" fill="#ddd" stroke="#333" stroke-width="1.5"/>
+          <text x="24" y="32" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">&sect;</text>
+        </svg>
+      </div>
+      <span class="icon-label">Impressum.txt</span>
+    </div>
+
     <div class="desktop-icon" data-file="trash" style="bottom: 20px; right: 20px;">
       <div class="icon-image trash-icon">
         <svg viewBox="0 0 48 48" width="48" height="48">
@@ -191,6 +202,36 @@
     </div>
   </div>
 
+  <!-- Impressum Window -->
+  <div class="window" id="impressum-window" style="display:none; width:420px; top:100px; left:160px;">
+    <div class="window-titlebar">
+      <div class="window-close" onclick="closeWindow('impressum-window')"></div>
+      <span class="window-title">Impressum.txt</span>
+      <div class="window-zoom" onclick="toggleZoom('impressum-window')"></div>
+    </div>
+    <div class="window-content notepad" style="padding:15px; font-family:'Courier New', monospace; font-size:12px; line-height:1.8;">
+      ==========================================<br>
+      &nbsp;&nbsp;IMPRESSUM<br>
+      &nbsp;&nbsp;Angaben gem. &sect; 5 DDG<br>
+      ==========================================<br>
+      <br>
+      maximlion GmbH<br>
+      Heinrich-Mueller-Str. 5<br>
+      90530 Wendelstein<br>
+      <br>
+      Kontakt:<br>
+      E-Mail: newsletter@maximilion.ai<br>
+      <br>
+      ------------------------------------------<br>
+      &nbsp;&nbsp;Verantwortlich fuer den Inhalt<br>
+      &nbsp;&nbsp;gem. &sect; 18 Abs. 2 MStV:<br>
+      &nbsp;&nbsp;maximlion GmbH<br>
+      &nbsp;&nbsp;Heinrich-Mueller-Str. 5<br>
+      &nbsp;&nbsp;90530 Wendelstein<br>
+      ------------------------------------------<br>
+    </div>
+  </div>
+
   <!-- Image Preview Windows (created dynamically) -->
   <template id="image-window-template">
     <div class="window image-window">
@@ -218,6 +259,6 @@
     </div>
   </div>
 
-  <script src="desktop.js?v=2"></script>
+  <script src="desktop.js?v=3"></script>
 </body>
 </html>

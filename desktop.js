@@ -221,6 +221,12 @@ function openFile(fileId) {
     bringToFront(win);
     return;
   }
+  if (fileId === 'impressum') {
+    const win = document.getElementById('impressum-window');
+    win.style.display = 'flex';
+    bringToFront(win);
+    return;
+  }
   if (fileId === 'trash') {
     // Easter egg: empty trash
     return;
