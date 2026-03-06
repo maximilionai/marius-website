@@ -78,7 +78,7 @@ function bringToFront(win) {
 function closeWindow(id) {
   const win = document.getElementById(id);
   if (win) {
-    if (id.startsWith('img-window-')) {
+    if (id.startsWith('img-window-') || id.startsWith('vid-window-')) {
       win.remove();
     } else {
       win.style.display = 'none';
@@ -227,7 +227,7 @@ document.querySelectorAll('.desktop-icon').forEach(icon => {
 
 function tryTrashDrop(icon, x, y) {
   const fileId = icon.dataset.file;
-  if (fileId === 'trash' || !fileId.startsWith('photo')) return;
+  if (fileId === 'trash' || !(fileId.startsWith('photo') || fileId.startsWith('video'))) return;
 
   const trashEl = document.getElementById('trash-icon');
   const trashRect = trashEl.getBoundingClientRect();
@@ -303,6 +303,11 @@ const imageFiles = {
   photo5: { title: 'Architecture.jpg', src: 'images/architecture.jpg', thumb: 'images/thumb_architecture.jpg', w: 640, h: 480 },
 };
 
+const videoFiles = {
+  video1: { title: 'Showreel.mov', vimeoId: '305214127', w: 640, h: 360 },
+  video2: { title: 'BTS.mov', vimeoId: '217499569', w: 640, h: 360 },
+};
+
 const imageOrder = ['photo1', 'photo2', 'photo3', 'photo4', 'photo5'];
 let windowCounter = 0;
 
@@ -336,6 +341,13 @@ function openFile(fileId) {
     if (trashedItems.size > 0) {
       emptyTrash();
     }
+    return;
+  }
+
+  // Video files
+  const video = videoFiles[fileId];
+  if (video) {
+    openVideoWindow(video);
     return;
   }
 
@@ -395,6 +407,70 @@ function openFile(fileId) {
   imgEl.src = img.src;
   imgEl.alt = img.title;
   content.appendChild(imgEl);
+
+  win.append(titlebar, content);
+
+  document.getElementById('desktop').appendChild(win);
+  bringToFront(win);
+}
+
+function openVideoWindow(video) {
+  windowCounter++;
+  const winId = 'vid-window-' + windowCounter;
+
+  const win = document.createElement('div');
+  win.className = 'window';
+  win.id = winId;
+
+  const maxW = Math.min(video.w + 4, window.innerWidth - 100);
+  const maxH = Math.min(video.h + 26, window.innerHeight - 80);
+  const scale = Math.min(maxW / (video.w + 4), maxH / (video.h + 26), 1);
+  const finalW = Math.round((video.w + 4) * scale);
+  const finalH = Math.round((video.h + 26) * scale);
+
+  const offset = (windowCounter % 5) * 20;
+  win.style.cssText = `
+    width: ${finalW}px;
+    height: ${finalH}px;
+    top: ${60 + offset}px;
+    left: ${80 + offset}px;
+    display: flex;
+  `;
+
+  const titlebar = document.createElement('div');
+  titlebar.className = 'window-titlebar';
+
+  const closeBtn = document.createElement('div');
+  closeBtn.className = 'window-close';
+  closeBtn.setAttribute('tabindex', '0');
+  closeBtn.setAttribute('role', 'button');
+  closeBtn.setAttribute('aria-label', 'Close');
+  closeBtn.addEventListener('click', () => closeWindow(winId));
+  closeBtn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); closeWindow(winId); } });
+
+  const titleSpan = document.createElement('span');
+  titleSpan.className = 'window-title';
+  titleSpan.textContent = video.title;
+
+  const zoomBtn = document.createElement('div');
+  zoomBtn.className = 'window-zoom';
+  zoomBtn.setAttribute('tabindex', '0');
+  zoomBtn.setAttribute('role', 'button');
+  zoomBtn.setAttribute('aria-label', 'Zoom');
+  zoomBtn.addEventListener('click', () => toggleZoom(winId));
+  zoomBtn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleZoom(winId); } });
+
+  titlebar.append(closeBtn, titleSpan, zoomBtn);
+
+  const content = document.createElement('div');
+  content.className = 'window-content video-content';
+
+  const iframe = document.createElement('iframe');
+  iframe.src = `https://player.vimeo.com/video/${video.vimeoId}?autoplay=1&title=0&byline=0&portrait=0`;
+  iframe.setAttribute('allow', 'autoplay; fullscreen');
+  iframe.setAttribute('allowfullscreen', '');
+  iframe.title = video.title;
+  content.appendChild(iframe);
 
   win.append(titlebar, content);
 
