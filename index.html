@@ -174,7 +174,7 @@
   <!-- About This Mac Window -->
   <div class="window" id="about-mac-window" style="display:none; width:400px; top:100px; left:200px;">
     <div class="window-titlebar">
-      <div class="window-close" onclick="closeWindow('about-mac-window')" tabindex="0" role="button" aria-label="Close"></div>
+      <div class="window-close" data-close="about-mac-window" tabindex="0" role="button" aria-label="Close"></div>
       <span class="window-title">About This Mac</span>
     </div>
     <div class="window-content" style="text-align:center; padding:20px;">
@@ -195,9 +195,9 @@
   <!-- About Marius Window -->
   <div class="window" id="about-window" style="display:none; width:480px; top:80px; left:120px;">
     <div class="window-titlebar">
-      <div class="window-close" onclick="closeWindow('about-window')" tabindex="0" role="button" aria-label="Close"></div>
+      <div class="window-close" data-close="about-window" tabindex="0" role="button" aria-label="Close"></div>
       <span class="window-title">About Marius</span>
-      <div class="window-zoom" onclick="toggleZoom('about-window')" tabindex="0" role="button" aria-label="Zoom"></div>
+      <div class="window-zoom" data-zoom="about-window" tabindex="0" role="button" aria-label="Zoom"></div>
     </div>
     <div class="window-content" style="padding:20px;">
       <h2 style="margin:0 0 10px 0; font-size:18px;">Hello, I'm Marius.</h2>
@@ -219,9 +219,9 @@
   <!-- Contact Window -->
   <div class="window" id="contact-window" style="display:none; width:400px; top:120px; left:180px;">
     <div class="window-titlebar">
-      <div class="window-close" onclick="closeWindow('contact-window')" tabindex="0" role="button" aria-label="Close"></div>
+      <div class="window-close" data-close="contact-window" tabindex="0" role="button" aria-label="Close"></div>
       <span class="window-title">Contact.txt</span>
-      <div class="window-zoom" onclick="toggleZoom('contact-window')" tabindex="0" role="button" aria-label="Zoom"></div>
+      <div class="window-zoom" data-zoom="contact-window" tabindex="0" role="button" aria-label="Zoom"></div>
     </div>
     <div class="window-content notepad" style="padding:15px; font-family:'Courier New', monospace; font-size:13px; line-height:1.8;">
       ==========================================<br>
@@ -242,9 +242,9 @@
   <!-- Impressum Window -->
   <div class="window" id="impressum-window" style="display:none; width:420px; top:100px; left:160px;">
     <div class="window-titlebar">
-      <div class="window-close" onclick="closeWindow('impressum-window')" tabindex="0" role="button" aria-label="Close"></div>
+      <div class="window-close" data-close="impressum-window" tabindex="0" role="button" aria-label="Close"></div>
       <span class="window-title">Impressum.txt</span>
-      <div class="window-zoom" onclick="toggleZoom('impressum-window')" tabindex="0" role="button" aria-label="Zoom"></div>
+      <div class="window-zoom" data-zoom="impressum-window" tabindex="0" role="button" aria-label="Zoom"></div>
     </div>
     <div class="window-content notepad" style="padding:15px; font-family:'Courier New', monospace; font-size:12px; line-height:1.8;">
       ==========================================<br>
@@ -272,9 +272,9 @@
   <!-- Slideshow Window -->
   <div class="window" id="slideshow-window" style="display:none; width:700px; height:520px; top:60px; left:100px;">
     <div class="window-titlebar">
-      <div class="window-close" onclick="closeWindow('slideshow-window')" tabindex="0" role="button" aria-label="Close"></div>
+      <div class="window-close" data-close="slideshow-window" tabindex="0" role="button" aria-label="Close"></div>
       <span class="window-title">Slideshow</span>
-      <div class="window-zoom" onclick="toggleZoom('slideshow-window')" tabindex="0" role="button" aria-label="Zoom"></div>
+      <div class="window-zoom" data-zoom="slideshow-window" tabindex="0" role="button" aria-label="Zoom"></div>
     </div>
     <div class="window-content" style="background:#222; display:flex; flex-direction:column;">
       <div id="slideshow-main">

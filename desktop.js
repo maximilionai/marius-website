@@ -401,13 +401,20 @@ function openFile(fileId) {
   bringToFront(win);
 }
 
-// === Keyboard support for static window controls ===
-document.querySelectorAll('.window-close[onclick], .window-zoom[onclick]').forEach(btn => {
+// === Wire up static window close/zoom buttons via data attributes ===
+document.querySelectorAll('[data-close]').forEach(btn => {
+  const id = btn.dataset.close;
+  btn.addEventListener('click', () => closeWindow(id));
   btn.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      btn.click();
-    }
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); closeWindow(id); }
+  });
+});
+
+document.querySelectorAll('[data-zoom]').forEach(btn => {
+  const id = btn.dataset.zoom;
+  btn.addEventListener('click', () => toggleZoom(id));
+  btn.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleZoom(id); }
   });
 });
 
