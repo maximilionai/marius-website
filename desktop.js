@@ -76,6 +76,7 @@ function bringToFront(win) {
 }
 
 function closeWindow(id) {
+  if (id === 'pong-window') stopPong();
   const win = document.getElementById(id);
   if (win) {
     if (id.startsWith('img-window-') || id.startsWith('vid-window-')) {
@@ -335,6 +336,13 @@ function openFile(fileId) {
     win.style.display = 'flex';
     bringToFront(win);
     goToSlide(0);
+    return;
+  }
+  if (fileId === 'pong') {
+    const win = document.getElementById('pong-window');
+    win.style.display = 'flex';
+    bringToFront(win);
+    startPong();
     return;
   }
   if (fileId === 'trash') {
@@ -706,6 +714,170 @@ document.addEventListener('mousemove', (e) => {
     pupil.style.transform = `translate(calc(-50% + ${px}px), calc(-50% + ${py}px))`;
   });
 });
+
+// === Pong Game ===
+let pongRAF = null;
+let pongRunning = false;
+let pongAbort = null;
+
+function startPong() {
+  stopPong();
+  pongRunning = true;
+  pongAbort = new AbortController();
+  const signal = pongAbort.signal;
+
+  const canvas = document.getElementById('pong-canvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+
+  const paddleW = 8, paddleH = 50;
+  const ballSize = 8;
+  const winScore = 5;
+
+  let player = { y: H / 2 - paddleH / 2 };
+  let cpu = { y: H / 2 - paddleH / 2 };
+  let ball = { x: W / 2, y: H / 2, vx: 7, vy: 4 };
+  let score = { player: 0, cpu: 0 };
+  let gameOver = false;
+  let winner = '';
+  let cpuSpeed = 4;
+
+  canvas.addEventListener('mousemove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const scaleY = H / rect.height;
+    player.y = (e.clientY - rect.top) * scaleY - paddleH / 2;
+    player.y = Math.max(0, Math.min(H - paddleH, player.y));
+  }, { signal });
+
+  canvas.addEventListener('click', () => {
+    if (gameOver) {
+      gameOver = false;
+      winner = '';
+      score.player = 0;
+      score.cpu = 0;
+      player.y = H / 2 - paddleH / 2;
+      cpu.y = H / 2 - paddleH / 2;
+      ball.x = W / 2; ball.y = H / 2;
+      ball.vx = 7; ball.vy = (Math.random() - 0.5) * 6;
+    }
+  }, { signal });
+
+  function resetBall(dir) {
+    ball.x = W / 2;
+    ball.y = H / 2;
+    ball.vx = 7 * dir;
+    ball.vy = (Math.random() - 0.5) * 4;
+  }
+
+  function update() {
+    if (gameOver) return;
+
+    ball.x += ball.vx;
+    ball.y += ball.vy;
+
+    if (ball.y <= 0) { ball.y = 0; ball.vy = Math.abs(ball.vy); }
+    if (ball.y >= H - ballSize) { ball.y = H - ballSize; ball.vy = -Math.abs(ball.vy); }
+
+    if (ball.x <= 20 + paddleW && ball.x >= 20 &&
+        ball.y + ballSize >= player.y && ball.y <= player.y + paddleH) {
+      ball.x = 20 + paddleW;
+      ball.vx = Math.abs(ball.vx) * 1.05;
+      ball.vy = ((ball.y + ballSize / 2 - player.y) / paddleH - 0.5) * 6;
+    }
+
+    if (ball.x + ballSize >= W - 20 - paddleW && ball.x + ballSize <= W - 20 &&
+        ball.y + ballSize >= cpu.y && ball.y <= cpu.y + paddleH) {
+      ball.x = W - 20 - paddleW - ballSize;
+      ball.vx = -Math.abs(ball.vx) * 1.05;
+      ball.vy = ((ball.y + ballSize / 2 - cpu.y) / paddleH - 0.5) * 6;
+    }
+
+    const maxSpeed = 20;
+    ball.vx = Math.max(-maxSpeed, Math.min(maxSpeed, ball.vx));
+    ball.vy = Math.max(-maxSpeed, Math.min(maxSpeed, ball.vy));
+
+    if (ball.x < 0) {
+      score.cpu++;
+      if (score.cpu >= winScore) { gameOver = true; winner = 'Jobs Wins, You Lose!'; }
+      else resetBall(1);
+    }
+    if (ball.x > W) {
+      score.player++;
+      if (score.player >= winScore) { gameOver = true; winner = 'You Win!'; }
+      else resetBall(-1);
+    }
+
+    // Jobs AI: predict where ball will arrive
+    let target = ball.y + ballSize / 2;
+    if (ball.vx > 0) {
+      const frames = (W - 20 - paddleW - ball.x) / ball.vx;
+      let py = ball.y + ball.vy * frames;
+      // Bounce prediction
+      while (py < 0 || py > H) {
+        if (py < 0) py = -py;
+        if (py > H) py = 2 * H - py;
+      }
+      target = py;
+    }
+    const cpuCenter = cpu.y + paddleH / 2;
+    if (cpuCenter < target - 5) cpu.y += cpuSpeed;
+    else if (cpuCenter > target + 5) cpu.y -= cpuSpeed;
+    cpu.y = Math.max(0, Math.min(H - paddleH, cpu.y));
+  }
+
+  function draw() {
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.setLineDash([6, 6]);
+    ctx.strokeStyle = '#444';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(W / 2, 0);
+    ctx.lineTo(W / 2, H);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(20, player.y, paddleW, paddleH);
+    ctx.fillRect(W - 20 - paddleW, cpu.y, paddleW, paddleH);
+    ctx.fillRect(ball.x, ball.y, ballSize, ballSize);
+
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#555';
+    ctx.font = '10px Futura, Helvetica Neue, sans-serif';
+    ctx.fillText('You', W / 2 - 40, 20);
+    ctx.fillText('Jobs', W / 2 + 40, 20);
+    ctx.font = '24px Futura, Helvetica Neue, sans-serif';
+    ctx.fillStyle = '#666';
+    ctx.fillText(score.player, W / 2 - 40, 42);
+    ctx.fillText(score.cpu, W / 2 + 40, 42);
+
+    if (gameOver) {
+      ctx.fillStyle = '#fff';
+      ctx.font = '28px Futura, Helvetica Neue, sans-serif';
+      ctx.fillText(winner, W / 2, H / 2 - 10);
+      ctx.font = '14px Futura, Helvetica Neue, sans-serif';
+      ctx.fillStyle = '#999';
+      ctx.fillText('Click to play again', W / 2, H / 2 + 20);
+    }
+  }
+
+  function loop() {
+    update();
+    draw();
+    if (pongRunning) pongRAF = requestAnimationFrame(loop);
+  }
+
+  loop();
+}
+
+function stopPong() {
+  pongRunning = false;
+  if (pongRAF) cancelAnimationFrame(pongRAF);
+  if (pongAbort) { pongAbort.abort(); pongAbort = null; }
+}
 
 // === Touch Support ===
 

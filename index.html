@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Marius - Portfolio</title>
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
   <!-- Menu Bar -->
@@ -184,6 +184,20 @@
       <span class="icon-label">Slideshow</span>
     </div>
 
+    <div class="desktop-icon" data-file="pong" style="top: 420px; left: 20px;" tabindex="0" role="button" aria-label="Open Pong">
+      <div class="icon-image">
+        <svg viewBox="0 0 48 48" width="48" height="48">
+          <rect x="4" y="4" width="40" height="40" rx="4" fill="#111" stroke="#555" stroke-width="1.5"/>
+          <rect x="10" y="14" width="3" height="12" rx="1" fill="#fff"/>
+          <rect x="35" y="22" width="3" height="12" rx="1" fill="#fff"/>
+          <circle cx="24" cy="24" r="2.5" fill="#fff"/>
+          <line x1="24" y1="6" x2="24" y2="42" stroke="#555" stroke-width="1" stroke-dasharray="3,3"/>
+          <text x="24" y="47" text-anchor="middle" font-size="3" fill="#888">PONG</text>
+        </svg>
+      </div>
+      <span class="icon-label">Pong</span>
+    </div>
+
     <div class="desktop-icon" data-file="trash" id="trash-icon" style="bottom: 20px; right: 20px;" tabindex="0" role="button" aria-label="Trash">
       <div class="icon-image trash-icon">
         <svg id="trash-svg" viewBox="0 0 48 48" width="48" height="48">
@@ -317,6 +331,18 @@
     </div>
   </div>
 
+  <!-- Pong Window -->
+  <div class="window" id="pong-window" style="display:none; width:484px; height:362px; top:60px; left:120px;">
+    <div class="window-titlebar">
+      <div class="window-close" data-close="pong-window" tabindex="0" role="button" aria-label="Close"></div>
+      <span class="window-title">Pong</span>
+      <div class="window-zoom" data-zoom="pong-window" tabindex="0" role="button" aria-label="Zoom"></div>
+    </div>
+    <div class="window-content" style="background:#000; padding:0; display:flex; align-items:center; justify-content:center;">
+      <canvas id="pong-canvas" width="480" height="320"></canvas>
+    </div>
+  </div>
+
   <!-- Classic Mac Alert Dialog -->
   <div id="alert-dialog" style="display:none;">
     <div id="alert-content">
@@ -376,6 +402,6 @@
     </div>
   </div>
 
-  <script src="desktop.js?v=7"></script>
+  <script src="desktop.js?v=8"></script>
 </body>
 </html>
