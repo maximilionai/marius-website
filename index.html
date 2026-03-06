@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Marius - Portfolio</title>
-  <link rel="stylesheet" href="style.css?v=4">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Chicago&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
   <!-- Menu Bar -->
@@ -14,14 +12,10 @@
     <div class="menu-item" id="apple-menu">
       <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M11.2 0c.1.9-.3 1.8-.8 2.4-.6.7-1.5 1.2-2.4 1.1-.1-.9.3-1.8.9-2.4C9.5.4 10.5 0 11.2 0zm3 5.5c-.1.1-1.8 1-1.8 3.1 0 2.4 2.1 3.2 2.2 3.2 0 .1-.3 1.2-1.1 2.3-.7 1-1.4 2-2.5 2s-1.4-.7-2.6-.7c-1.3 0-1.7.7-2.7.7s-1.7-.9-2.5-2C2.1 12.2 1 9.5 1 7c0-2.7 1.8-4.2 3.5-4.2 1 0 1.8.7 2.4.7.6 0 1.5-.7 2.7-.7.5 0 2 .1 3 1.3l.6.4z' fill='black'/%3E%3C/svg%3E" alt="Apple" class="apple-logo">
       <div class="dropdown" id="apple-dropdown">
-        <div class="dropdown-item">About This Mac</div>
+        <div class="dropdown-item" id="menu-about-mac">About This Mac</div>
         <div class="dropdown-divider"></div>
-        <div class="dropdown-item disabled">System Preferences...</div>
-        <div class="dropdown-item disabled">App Store...</div>
         <div class="dropdown-divider"></div>
         <div class="dropdown-item disabled">Recent Items</div>
-        <div class="dropdown-divider"></div>
-        <div class="dropdown-item disabled">Force Quit...</div>
         <div class="dropdown-divider"></div>
         <div class="dropdown-item disabled">Sleep</div>
         <div class="dropdown-item disabled">Restart...</div>
@@ -29,11 +23,42 @@
       </div>
     </div>
     <div class="menu-item active-app"><strong>Finder</strong></div>
-    <div class="menu-item">File</div>
-    <div class="menu-item">Edit</div>
-    <div class="menu-item">View</div>
-    <div class="menu-item">Special</div>
-    <div class="menu-item">Help</div>
+    <div class="menu-item" id="file-menu">File
+      <div class="dropdown">
+        <div class="dropdown-item" id="menu-open">Open <span class="menu-shortcut">&#8984;O</span></div>
+        <div class="dropdown-item" id="menu-close-window">Close Window <span class="menu-shortcut">&#8984;W</span></div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item disabled">Get Info</div>
+      </div>
+    </div>
+    <div class="menu-item">Edit
+      <div class="dropdown">
+        <div class="dropdown-item disabled">Undo <span class="menu-shortcut">&#8984;Z</span></div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item disabled">Cut <span class="menu-shortcut">&#8984;X</span></div>
+        <div class="dropdown-item disabled">Copy <span class="menu-shortcut">&#8984;C</span></div>
+        <div class="dropdown-item disabled">Paste <span class="menu-shortcut">&#8984;V</span></div>
+        <div class="dropdown-item disabled">Select All <span class="menu-shortcut">&#8984;A</span></div>
+      </div>
+    </div>
+    <div class="menu-item" id="view-menu">View
+      <div class="dropdown">
+        <div class="dropdown-item" id="menu-show-desktop">Hide All Windows</div>
+        <div class="dropdown-item" id="menu-show-all">Show All Windows</div>
+      </div>
+    </div>
+    <div class="menu-item" id="special-menu">Special
+      <div class="dropdown">
+        <div class="dropdown-item" id="menu-empty-trash">Empty Trash...</div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item" id="menu-slideshow">Start Slideshow</div>
+      </div>
+    </div>
+    <div class="menu-item">Help
+      <div class="dropdown">
+        <div class="dropdown-item" id="menu-help-about">About Marius OS</div>
+      </div>
+    </div>
     <div id="eyeballs">
       <div class="eyeball">
         <div class="pupil" id="pupil-left"></div>
@@ -50,42 +75,42 @@
   <!-- Desktop -->
   <div id="desktop">
     <!-- Desktop Icons -->
-    <div class="desktop-icon" data-file="photo1" style="top: 20px; right: 20px;">
+    <div class="desktop-icon" data-file="photo1" style="top: 20px; right: 20px;" tabindex="0" role="button" aria-label="Open Landscape.jpg">
       <div class="icon-image">
         <img src="images/thumb_landscape.jpg" alt="Landscape">
       </div>
       <span class="icon-label">Landscape.jpg</span>
     </div>
 
-    <div class="desktop-icon" data-file="photo2" style="top: 120px; right: 20px;">
+    <div class="desktop-icon" data-file="photo2" style="top: 120px; right: 20px;" tabindex="0" role="button" aria-label="Open Portrait.jpg">
       <div class="icon-image">
         <img src="images/thumb_portrait.jpg" alt="Portrait">
       </div>
       <span class="icon-label">Portrait.jpg</span>
     </div>
 
-    <div class="desktop-icon" data-file="photo3" style="top: 220px; right: 20px;">
+    <div class="desktop-icon" data-file="photo3" style="top: 220px; right: 20px;" tabindex="0" role="button" aria-label="Open Street.jpg">
       <div class="icon-image">
         <img src="images/thumb_street.jpg" alt="Street">
       </div>
       <span class="icon-label">Street.jpg</span>
     </div>
 
-    <div class="desktop-icon" data-file="photo4" style="top: 320px; right: 20px;">
+    <div class="desktop-icon" data-file="photo4" style="top: 320px; right: 20px;" tabindex="0" role="button" aria-label="Open Nature.jpg">
       <div class="icon-image">
         <img src="images/thumb_nature.jpg" alt="Nature">
       </div>
       <span class="icon-label">Nature.jpg</span>
     </div>
 
-    <div class="desktop-icon" data-file="photo5" style="top: 420px; right: 20px;">
+    <div class="desktop-icon" data-file="photo5" style="top: 420px; right: 20px;" tabindex="0" role="button" aria-label="Open Architecture.jpg">
       <div class="icon-image">
         <img src="images/thumb_architecture.jpg" alt="Architecture">
       </div>
       <span class="icon-label">Architecture.jpg</span>
     </div>
 
-    <div class="desktop-icon" data-file="about" style="top: 20px; left: 20px;">
+    <div class="desktop-icon" data-file="about" style="top: 20px; left: 20px;" tabindex="0" role="button" aria-label="Open About Marius">
       <div class="icon-image folder-icon">
         <svg viewBox="0 0 48 48" width="48" height="48">
           <path d="M4 8h16l4 4h20v28H4V8z" fill="#f9d77e" stroke="#8b7332" stroke-width="1.5"/>
@@ -95,7 +120,7 @@
       <span class="icon-label">About Marius</span>
     </div>
 
-    <div class="desktop-icon" data-file="contact" style="top: 120px; left: 20px;">
+    <div class="desktop-icon" data-file="contact" style="top: 120px; left: 20px;" tabindex="0" role="button" aria-label="Open Contact">
       <div class="icon-image document-icon">
         <svg viewBox="0 0 48 48" width="48" height="48">
           <path d="M8 4h22l10 10v30H8V4z" fill="white" stroke="#333" stroke-width="1.5"/>
@@ -108,7 +133,7 @@
       <span class="icon-label">Contact.txt</span>
     </div>
 
-    <div class="desktop-icon" data-file="impressum" style="top: 220px; left: 20px;">
+    <div class="desktop-icon" data-file="impressum" style="top: 220px; left: 20px;" tabindex="0" role="button" aria-label="Open Impressum">
       <div class="icon-image document-icon">
         <svg viewBox="0 0 48 48" width="48" height="48">
           <path d="M8 4h22l10 10v30H8V4z" fill="white" stroke="#333" stroke-width="1.5"/>
@@ -119,9 +144,21 @@
       <span class="icon-label">Impressum.txt</span>
     </div>
 
-    <div class="desktop-icon" data-file="trash" style="bottom: 20px; right: 20px;">
-      <div class="icon-image trash-icon">
+    <div class="desktop-icon" data-file="slideshow" style="top: 320px; left: 20px;" tabindex="0" role="button" aria-label="Open Slideshow">
+      <div class="icon-image">
         <svg viewBox="0 0 48 48" width="48" height="48">
+          <rect x="4" y="8" width="40" height="28" rx="2" fill="#333" stroke="#111" stroke-width="1.5"/>
+          <rect x="8" y="11" width="32" height="22" fill="#555"/>
+          <polygon points="20,16 20,28 30,22" fill="#fff"/>
+          <rect x="16" y="38" width="16" height="3" rx="1" fill="#666"/>
+        </svg>
+      </div>
+      <span class="icon-label">Slideshow</span>
+    </div>
+
+    <div class="desktop-icon" data-file="trash" id="trash-icon" style="bottom: 20px; right: 20px;" tabindex="0" role="button" aria-label="Trash">
+      <div class="icon-image trash-icon">
+        <svg id="trash-svg" viewBox="0 0 48 48" width="48" height="48">
           <path d="M12 16h24v24c0 2-2 4-4 4H16c-2 0-4-2-4-4V16z" fill="#ccc" stroke="#666" stroke-width="1.5"/>
           <path d="M10 12h28v4H10z" fill="#ccc" stroke="#666" stroke-width="1.5"/>
           <path d="M18 12V8h12v4" fill="none" stroke="#666" stroke-width="1.5"/>
@@ -134,10 +171,10 @@
     </div>
   </div>
 
-  <!-- About This Mac Window (hidden by default) -->
+  <!-- About This Mac Window -->
   <div class="window" id="about-mac-window" style="display:none; width:400px; top:100px; left:200px;">
     <div class="window-titlebar">
-      <div class="window-close" onclick="closeWindow('about-mac-window')"></div>
+      <div class="window-close" onclick="closeWindow('about-mac-window')" tabindex="0" role="button" aria-label="Close"></div>
       <span class="window-title">About This Mac</span>
     </div>
     <div class="window-content" style="text-align:center; padding:20px;">
@@ -150,7 +187,7 @@
       <p style="font-size:11px; color:#333;">
         A portfolio by <strong>Marius</strong><br>
         Built with love and nostalgia<br><br>
-        Photographer &middot; Creative &middot; Dreamer
+        Creative Director &middot; Photographer
       </p>
     </div>
   </div>
@@ -158,14 +195,14 @@
   <!-- About Marius Window -->
   <div class="window" id="about-window" style="display:none; width:480px; top:80px; left:120px;">
     <div class="window-titlebar">
-      <div class="window-close" onclick="closeWindow('about-window')"></div>
+      <div class="window-close" onclick="closeWindow('about-window')" tabindex="0" role="button" aria-label="Close"></div>
       <span class="window-title">About Marius</span>
-      <div class="window-zoom" onclick="toggleZoom('about-window')"></div>
+      <div class="window-zoom" onclick="toggleZoom('about-window')" tabindex="0" role="button" aria-label="Zoom"></div>
     </div>
     <div class="window-content" style="padding:20px;">
       <h2 style="margin:0 0 10px 0; font-size:18px;">Hello, I'm Marius.</h2>
       <p style="font-size:13px; line-height:1.6;">
-        I'm a photographer and creative based in Germany. I love capturing moments
+        I'm a creative director and photographer based in Germany. I love capturing moments
         that tell stories -- from sweeping landscapes to quiet street corners.
       </p>
       <p style="font-size:13px; line-height:1.6;">
@@ -182,9 +219,9 @@
   <!-- Contact Window -->
   <div class="window" id="contact-window" style="display:none; width:400px; top:120px; left:180px;">
     <div class="window-titlebar">
-      <div class="window-close" onclick="closeWindow('contact-window')"></div>
+      <div class="window-close" onclick="closeWindow('contact-window')" tabindex="0" role="button" aria-label="Close"></div>
       <span class="window-title">Contact.txt</span>
-      <div class="window-zoom" onclick="toggleZoom('contact-window')"></div>
+      <div class="window-zoom" onclick="toggleZoom('contact-window')" tabindex="0" role="button" aria-label="Zoom"></div>
     </div>
     <div class="window-content notepad" style="padding:15px; font-family:'Courier New', monospace; font-size:13px; line-height:1.8;">
       ==========================================<br>
@@ -205,9 +242,9 @@
   <!-- Impressum Window -->
   <div class="window" id="impressum-window" style="display:none; width:420px; top:100px; left:160px;">
     <div class="window-titlebar">
-      <div class="window-close" onclick="closeWindow('impressum-window')"></div>
+      <div class="window-close" onclick="closeWindow('impressum-window')" tabindex="0" role="button" aria-label="Close"></div>
       <span class="window-title">Impressum.txt</span>
-      <div class="window-zoom" onclick="toggleZoom('impressum-window')"></div>
+      <div class="window-zoom" onclick="toggleZoom('impressum-window')" tabindex="0" role="button" aria-label="Zoom"></div>
     </div>
     <div class="window-content notepad" style="padding:15px; font-family:'Courier New', monospace; font-size:12px; line-height:1.8;">
       ==========================================<br>
@@ -232,19 +269,45 @@
     </div>
   </div>
 
-  <!-- Image Preview Windows (created dynamically) -->
-  <template id="image-window-template">
-    <div class="window image-window">
-      <div class="window-titlebar">
-        <div class="window-close"></div>
-        <span class="window-title"></span>
-        <div class="window-zoom"></div>
+  <!-- Slideshow Window -->
+  <div class="window" id="slideshow-window" style="display:none; width:700px; height:520px; top:60px; left:100px;">
+    <div class="window-titlebar">
+      <div class="window-close" onclick="closeWindow('slideshow-window')" tabindex="0" role="button" aria-label="Close"></div>
+      <span class="window-title">Slideshow</span>
+      <div class="window-zoom" onclick="toggleZoom('slideshow-window')" tabindex="0" role="button" aria-label="Zoom"></div>
+    </div>
+    <div class="window-content" style="background:#222; display:flex; flex-direction:column;">
+      <div id="slideshow-main">
+        <img id="slideshow-img" src="" alt="">
       </div>
-      <div class="window-content image-content">
-        <img src="" alt="">
+      <div id="slideshow-controls">
+        <button id="slide-prev" aria-label="Previous">&laquo; Prev</button>
+        <span id="slide-counter"></span>
+        <button id="slide-next" aria-label="Next">Next &raquo;</button>
+      </div>
+      <div id="slideshow-filmstrip"></div>
+    </div>
+  </div>
+
+  <!-- Classic Mac Alert Dialog -->
+  <div id="alert-dialog" style="display:none;">
+    <div id="alert-content">
+      <div id="alert-icon">
+        <svg viewBox="0 0 48 48" width="32" height="32">
+          <circle cx="24" cy="24" r="20" fill="#fff" stroke="#000" stroke-width="2"/>
+          <text x="24" y="30" text-anchor="middle" font-size="24" font-weight="bold" fill="#000">!</text>
+        </svg>
+      </div>
+      <p id="alert-text"></p>
+      <div id="alert-buttons">
+        <button id="alert-cancel">Cancel</button>
+        <button id="alert-ok">OK</button>
       </div>
     </div>
-  </template>
+  </div>
+
+  <!-- Screensaver -->
+  <canvas id="screensaver" style="display:none;"></canvas>
 
   <!-- Startup overlay -->
   <div id="startup-overlay">
@@ -259,6 +322,6 @@
     </div>
   </div>
 
-  <script src="desktop.js?v=4"></script>
+  <script src="desktop.js?v=5"></script>
 </body>
 </html>

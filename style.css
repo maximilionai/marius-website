@@ -1,15 +1,8 @@
 /* === Reset & Base === */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-@font-face {
-  font-family: 'Chicago';
-  src: url('https://cdn.jsdelivr.net/gh/nickymarino/chicago-font@master/Chicago.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-}
-
 body {
-  font-family: 'Chicago', 'Geneva', 'Lucida Grande', 'Helvetica Neue', sans-serif;
+  font-family: 'Futura', 'Helvetica Neue', sans-serif;
   overflow: hidden;
   height: 100vh;
   width: 100vw;
@@ -124,6 +117,9 @@ body {
   padding: 4px 16px;
   font-size: 12px;
   color: #000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .dropdown-item:hover {
@@ -145,6 +141,12 @@ body {
   margin: 2px 0;
 }
 
+.menu-shortcut {
+  font-size: 11px;
+  margin-left: 20px;
+  opacity: 0.6;
+}
+
 /* === Desktop === */
 #desktop {
   position: fixed;
@@ -152,22 +154,6 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 1px,
-      rgba(0,0,0,0.03) 1px,
-      rgba(0,0,0,0.03) 2px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 1px,
-      rgba(0,0,0,0.03) 1px,
-      rgba(0,0,0,0.03) 2px
-    ),
-    #6699cc;
 }
 
 /* === Desktop Icons === */
@@ -180,6 +166,10 @@ body {
   cursor: default;
   padding: 4px;
   border-radius: 2px;
+}
+
+.desktop-icon.trashed {
+  display: none !important;
 }
 
 .desktop-icon.selected .icon-label {
@@ -383,6 +373,146 @@ body {
   border: 1px solid #000;
 }
 
+/* === Slideshow === */
+#slideshow-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 0;
+}
+
+#slideshow-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+#slideshow-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 8px;
+  background: #111;
+  border-top: 1px solid #444;
+}
+
+#slideshow-controls button {
+  background: #444;
+  color: #fff;
+  border: 1px solid #666;
+  padding: 4px 12px;
+  font-family: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+#slideshow-controls button:hover {
+  background: #666;
+}
+
+#slide-counter {
+  color: #999;
+  font-size: 11px;
+}
+
+#slideshow-filmstrip {
+  display: flex;
+  gap: 4px;
+  padding: 6px 8px;
+  background: #0a0a0a;
+  border-top: 1px solid #333;
+  overflow-x: auto;
+}
+
+.filmstrip-thumb {
+  width: 48px;
+  height: 36px;
+  object-fit: cover;
+  border: 2px solid transparent;
+  cursor: pointer;
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+.filmstrip-thumb.active {
+  border-color: #fff;
+  opacity: 1;
+}
+
+.filmstrip-thumb:hover {
+  opacity: 1;
+}
+
+/* === Alert Dialog === */
+#alert-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.1);
+}
+
+#alert-content {
+  background: #eee;
+  border: 2px solid #000;
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.4);
+  padding: 20px;
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+#alert-text {
+  font-size: 12px;
+  text-align: center;
+  line-height: 1.5;
+}
+
+#alert-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+#alert-buttons button {
+  font-family: inherit;
+  font-size: 12px;
+  padding: 4px 20px;
+  border: 2px solid #000;
+  background: #fff;
+  cursor: pointer;
+}
+
+#alert-buttons button:hover {
+  background: #ddd;
+}
+
+#alert-ok {
+  font-weight: bold;
+  box-shadow: 2px 2px 0 #000;
+}
+
+/* === Screensaver === */
+#screensaver {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 90000;
+  cursor: none;
+  background: #000;
+}
+
 /* === Startup === */
 #startup-overlay {
   position: fixed;
@@ -421,7 +551,7 @@ body {
   color: #ccc;
   font-size: 11px;
   margin-top: 8px;
-  font-family: 'Chicago', monospace;
+  font-family: 'Futura', monospace;
 }
 
 /* Zoom/maximize state */
