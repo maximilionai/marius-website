@@ -304,8 +304,8 @@ const imageFiles = {
 };
 
 const videoFiles = {
-  video1: { title: 'Showreel.mov', vimeoId: '305214127', w: 640, h: 360 },
-  video2: { title: 'BTS.mov', vimeoId: '217499569', w: 640, h: 360 },
+  video1: { title: 'Showreel.mov', vimeoId: '1145703168', w: 640, h: 360 },
+  video2: { title: 'BTS.mov', vimeoId: '1066526515', w: 640, h: 360 },
 };
 
 const imageOrder = ['photo1', 'photo2', 'photo3', 'photo4', 'photo5'];
