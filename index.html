@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Marius - Portfolio</title>
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
   <!-- Menu Bar -->
@@ -306,6 +306,32 @@
     </div>
   </div>
 
+  <!-- Cookie Banner -->
+  <div id="cookie-banner" style="display:none;">
+    <div id="cookie-dialog">
+      <div id="cookie-icon">
+        <svg viewBox="0 0 48 48" width="32" height="32">
+          <circle cx="24" cy="24" r="20" fill="#f5deb3" stroke="#8b6914" stroke-width="2"/>
+          <circle cx="16" cy="18" r="3" fill="#6b3a1f"/>
+          <circle cx="28" cy="14" r="2.5" fill="#6b3a1f"/>
+          <circle cx="20" cy="30" r="2.5" fill="#6b3a1f"/>
+          <circle cx="32" cy="26" r="3" fill="#6b3a1f"/>
+          <circle cx="24" cy="22" r="2" fill="#6b3a1f"/>
+          <circle cx="14" cy="28" r="1.5" fill="#8b6914" opacity="0.4"/>
+          <circle cx="30" cy="34" r="1.5" fill="#8b6914" opacity="0.4"/>
+        </svg>
+      </div>
+      <div id="cookie-body">
+        <p id="cookie-title">This website uses cookies.</p>
+        <p id="cookie-text">This site uses cookies to remember your desktop preferences and provide you with the best experience. No tracking, no ads -- just cookies.</p>
+      </div>
+      <div id="cookie-buttons">
+        <button id="cookie-decline">Decline</button>
+        <button id="cookie-accept">OK</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Screensaver -->
   <canvas id="screensaver" style="display:none;"></canvas>
 
@@ -322,6 +348,6 @@
     </div>
   </div>
 
-  <script src="desktop.js?v=5"></script>
+  <script src="desktop.js?v=6"></script>
 </body>
 </html>

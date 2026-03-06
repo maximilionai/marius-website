@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         overlay.style.transition = 'opacity 0.5s';
         setTimeout(() => {
           overlay.remove();
+          showCookieBanner();
           initScreensaverTimer();
         }, 500);
       }, 400);
@@ -502,6 +503,23 @@ function goToSlide(idx) {
 
   document.querySelectorAll('.filmstrip-thumb').forEach((thumb, i) => {
     thumb.classList.toggle('active', i === idx);
+  });
+}
+
+// === Cookie Banner ===
+function showCookieBanner() {
+  if (localStorage.getItem('cookieChoice')) return;
+  const banner = document.getElementById('cookie-banner');
+  banner.style.display = 'flex';
+
+  document.getElementById('cookie-accept').addEventListener('click', () => {
+    localStorage.setItem('cookieChoice', 'accepted');
+    banner.style.display = 'none';
+  });
+
+  document.getElementById('cookie-decline').addEventListener('click', () => {
+    localStorage.setItem('cookieChoice', 'declined');
+    banner.style.display = 'none';
   });
 }
 
