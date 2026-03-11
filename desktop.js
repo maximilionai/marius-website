@@ -78,7 +78,7 @@ function closeWindow(id) {
   if (id === 'pong-window') stopPong();
   const win = document.getElementById(id);
   if (win) {
-    if (id.startsWith('img-window-') || id.startsWith('vid-window-')) {
+    if (id.startsWith('img-window-') || id.startsWith('vid-window-') || id.startsWith('txt-window-')) {
       win.remove();
     } else {
       win.style.display = 'none';
@@ -372,7 +372,7 @@ document.querySelectorAll('.desktop-icon').forEach(icon => {
 
 function tryTrashDrop(icon, x, y) {
   const fileId = icon.dataset.file;
-  if (fileId === 'trash' || !(fileId.startsWith('photo') || fileId.startsWith('video'))) return;
+  if (fileId === 'trash' || !(fileId.startsWith('photo') || fileId.startsWith('video') || fileId.startsWith('text'))) return;
 
   const trashEl = document.getElementById('trash-icon');
   const trashRect = trashEl.getBoundingClientRect();
@@ -491,6 +491,172 @@ function layoutDynamicIcons() {
 
 window.addEventListener('resize', layoutDynamicIcons);
 
+// === Text Files ===
+const textFiles = {};
+
+// Simple markdown to HTML renderer
+function renderMarkdown(md) {
+  let html = '';
+  const lines = md.split('\n');
+  let inList = false;
+  let listType = '';
+
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+
+    // Headings
+    if (line.startsWith('### ')) { html += `<h3>${inlineMarkdown(line.slice(4))}</h3>`; continue; }
+    if (line.startsWith('## ')) { html += `<h2>${inlineMarkdown(line.slice(3))}</h2>`; continue; }
+    if (line.startsWith('# ')) { html += `<h1>${inlineMarkdown(line.slice(2))}</h1>`; continue; }
+
+    // Horizontal rule
+    if (/^---+$/.test(line.trim())) { html += '<hr>'; continue; }
+
+    // Unordered list
+    if (/^[-*] /.test(line.trim())) {
+      if (!inList || listType !== 'ul') { if (inList) html += `</${listType}>`; html += '<ul>'; inList = true; listType = 'ul'; }
+      html += `<li>${inlineMarkdown(line.trim().slice(2))}</li>`;
+      continue;
+    }
+
+    // Ordered list
+    if (/^\d+\. /.test(line.trim())) {
+      if (!inList || listType !== 'ol') { if (inList) html += `</${listType}>`; html += '<ol>'; inList = true; listType = 'ol'; }
+      html += `<li>${inlineMarkdown(line.trim().replace(/^\d+\.\s/, ''))}</li>`;
+      continue;
+    }
+
+    // Close list if we were in one
+    if (inList) { html += `</${listType}>`; inList = false; }
+
+    // Empty line
+    if (line.trim() === '') continue;
+
+    // Paragraph
+    html += `<p>${inlineMarkdown(line)}</p>`;
+  }
+  if (inList) html += `</${listType}>`;
+  return html;
+}
+
+function inlineMarkdown(text) {
+  // Bold
+  text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  // Italic
+  text = text.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  // Links
+  text = text.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>');
+  // Inline code
+  text = text.replace(/`(.+?)`/g, '<code>$1</code>');
+  return text;
+}
+
+function openTextWindow(textFile) {
+  windowCounter++;
+  const winId = 'txt-window-' + windowCounter;
+
+  const win = document.createElement('div');
+  win.className = 'window';
+  win.id = winId;
+
+  const offset = (windowCounter % 5) * 20;
+  win.style.cssText = `width: 440px; top: ${80 + offset}px; left: ${120 + offset}px; display: flex;`;
+
+  const titlebar = document.createElement('div');
+  titlebar.className = 'window-titlebar';
+
+  const closeBtn = document.createElement('div');
+  closeBtn.className = 'window-close';
+  closeBtn.setAttribute('tabindex', '0');
+  closeBtn.setAttribute('role', 'button');
+  closeBtn.setAttribute('aria-label', 'Close');
+  closeBtn.addEventListener('click', () => closeWindow(winId));
+  closeBtn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); closeWindow(winId); } });
+
+  const titleSpan = document.createElement('span');
+  titleSpan.className = 'window-title';
+  titleSpan.textContent = textFile.title;
+
+  const zoomBtn = document.createElement('div');
+  zoomBtn.className = 'window-zoom';
+  zoomBtn.setAttribute('tabindex', '0');
+  zoomBtn.setAttribute('role', 'button');
+  zoomBtn.setAttribute('aria-label', 'Zoom');
+  zoomBtn.addEventListener('click', () => toggleZoom(winId));
+  zoomBtn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleZoom(winId); } });
+
+  titlebar.append(closeBtn, titleSpan, zoomBtn);
+
+  const content = document.createElement('div');
+  content.className = 'window-content text-content';
+  content.innerHTML = '<p style="color:#999;">Loading...</p>';
+
+  const resize = document.createElement('div');
+  resize.className = 'window-resize';
+
+  win.append(titlebar, content, resize);
+  document.getElementById('desktop').appendChild(win);
+  bringToFront(win);
+
+  // Fetch and render markdown
+  fetch('texts/' + textFile.filename)
+    .then(r => r.text())
+    .then(md => { content.innerHTML = renderMarkdown(md); });
+}
+
+// Load text files from texts.yaml and create desktop icons
+const leftSideIcons = [];
+
+fetch('texts.yaml')
+  .then(r => r.text())
+  .then(text => {
+    const desktop = document.getElementById('desktop');
+    const lines = text.trim().split('\n').filter(l => l.trim() && !l.trim().startsWith('#'));
+
+    const docIconSvg = `<svg viewBox="0 0 48 48" width="48" height="48">
+      <path d="M8 4h22l10 10v30H8V4z" fill="white" stroke="#333" stroke-width="1.5"/>
+      <path d="M30 4v10h10" fill="#ddd" stroke="#333" stroke-width="1.5"/>
+      <line x1="14" y1="22" x2="34" y2="22" stroke="#333" stroke-width="1"/>
+      <line x1="14" y1="28" x2="34" y2="28" stroke="#333" stroke-width="1"/>
+      <line x1="14" y1="34" x2="28" y2="34" stroke="#333" stroke-width="1"/>
+    </svg>`;
+
+    lines.forEach((line, i) => {
+      const filename = line.trim();
+      if (!filename) return;
+      const displayName = filename.replace(/\.md$/, '');
+      const fileId = 'text' + (i + 1);
+
+      textFiles[fileId] = { title: displayName, filename };
+
+      const icon = document.createElement('div');
+      icon.className = 'desktop-icon';
+      icon.dataset.file = fileId;
+      icon.setAttribute('tabindex', '0');
+      icon.setAttribute('role', 'button');
+      icon.setAttribute('aria-label', 'Open ' + displayName);
+
+      icon.innerHTML = `<div class="icon-image">${docIconSvg}</div><span class="icon-label" data-full="${displayName}">${displayName}</span>`;
+
+      initIconInteractions(icon, fileId);
+      desktop.appendChild(icon);
+      leftSideIcons.push(icon);
+    });
+
+    layoutLeftIcons();
+  });
+
+// Layout left-side text icons (top-down, left-aligned, below static icons)
+function layoutLeftIcons() {
+  const startTop = 220; // below slideshow + pong
+  const iconH = 90;
+  leftSideIcons.forEach((icon, i) => {
+    icon.style.top = (startTop + i * iconH) + 'px';
+    icon.style.left = '20px';
+    icon.style.right = 'auto';
+  });
+}
+
 // Load photos from photos.yaml and create desktop icons
 fetch('photos.yaml')
   .then(r => r.text())
@@ -582,22 +748,10 @@ fetch('videos.yaml')
 let windowCounter = 0;
 
 function openFile(fileId) {
-  if (fileId === 'about') {
-    const win = document.getElementById('about-window');
-    win.style.display = 'flex';
-    bringToFront(win);
-    return;
-  }
-  if (fileId === 'contact') {
-    const win = document.getElementById('contact-window');
-    win.style.display = 'flex';
-    bringToFront(win);
-    return;
-  }
-  if (fileId === 'impressum') {
-    const win = document.getElementById('impressum-window');
-    win.style.display = 'flex';
-    bringToFront(win);
+  // Text files from texts.yaml
+  const textFile = textFiles[fileId];
+  if (textFile) {
+    openTextWindow(textFile);
     return;
   }
   if (fileId === 'slideshow') {

@@ -684,6 +684,71 @@ body {
   font-family: 'Futura', monospace;
 }
 
+/* === Text Document (SimpleText style) === */
+.window-content.text-content {
+  background: #fff;
+  padding: 20px 24px;
+  font-family: 'Geneva', 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #000;
+}
+
+.window-content.text-content h1 {
+  font-family: 'Futura', 'Chicago', 'Helvetica Neue', sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #000;
+}
+
+.window-content.text-content h2 {
+  font-family: 'Futura', 'Chicago', 'Helvetica Neue', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 16px 0 8px 0;
+}
+
+.window-content.text-content h3 {
+  font-family: 'Futura', 'Chicago', 'Helvetica Neue', sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  margin: 12px 0 6px 0;
+}
+
+.window-content.text-content p {
+  margin: 0 0 10px 0;
+}
+
+.window-content.text-content strong {
+  font-weight: bold;
+}
+
+.window-content.text-content em {
+  font-style: italic;
+}
+
+.window-content.text-content hr {
+  border: none;
+  border-top: 1px solid #000;
+  margin: 12px 0;
+}
+
+.window-content.text-content a {
+  color: #000;
+  text-decoration: underline;
+}
+
+.window-content.text-content ul,
+.window-content.text-content ol {
+  margin: 0 0 10px 20px;
+}
+
+.window-content.text-content li {
+  margin-bottom: 4px;
+}
+
 /* Zoom/maximize state */
 .window.zoomed {
   top: 24px !important;
