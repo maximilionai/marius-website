@@ -6,6 +6,9 @@ on:
       - 'images/**'
       - 'photos.yaml'
 
+permissions:
+  contents: write
+
 jobs:
   thumbnails:
     runs-on: ubuntu-latest
