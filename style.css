@@ -68,11 +68,13 @@ body {
   top: 0;
   height: 24px;
   transform: translateX(-50%);
+  transform-origin: top center;
   display: flex;
   gap: 4px;
   align-items: center;
   z-index: 10002;
   pointer-events: none;
+  transition: transform 0.15s ease-out;
 }
 
 .eyeball {

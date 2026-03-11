@@ -205,6 +205,7 @@ document.querySelectorAll('.desktop-icon').forEach(icon => {
   marquee.id = 'selection-marquee';
   desktop.appendChild(marquee);
 
+  const eyeballs = document.getElementById('eyeballs');
   let isSelecting = false;
   let startX, startY;
 
@@ -244,6 +245,12 @@ document.querySelectorAll('.desktop-icon').forEach(icon => {
     marquee.style.width = w + 'px';
     marquee.style.height = h + 'px';
 
+    // Scale eyeballs proportionally to marquee area
+    const area = w * h;
+    const maxArea = window.innerWidth * window.innerHeight * 0.25;
+    const scale = 1 + (Math.min(area, maxArea) / maxArea) * 3;
+    eyeballs.style.transform = `translateX(-50%) scale(${scale})`;
+
     const marqueeRect = { left: x, top: y, right: x + w, bottom: y + h };
 
     desktop.querySelectorAll('.desktop-icon').forEach(icon => {
@@ -276,6 +283,7 @@ document.querySelectorAll('.desktop-icon').forEach(icon => {
     if (!isSelecting) return;
     isSelecting = false;
     marquee.style.display = 'none';
+    eyeballs.style.transform = 'translateX(-50%) scale(1)';
     if (selectedIcons.size > 0) justMarqueed = true;
   });
 })();
