@@ -290,7 +290,8 @@ document.querySelectorAll('.desktop-icon').forEach(icon => {
 // === Dragging Desktop Icons (with trash drop) ===
 const trashedItems = new Set();
 
-document.querySelectorAll('.desktop-icon').forEach(icon => {
+function makeIconDraggable(icon) {
+  // Mouse drag
   let isDragging = false;
   let startX, startY, origLeft, origTop;
 
@@ -326,6 +327,47 @@ document.querySelectorAll('.desktop-icon').forEach(icon => {
     document.addEventListener('mousemove', onMove);
     document.addEventListener('mouseup', onUp);
   });
+
+  // Touch drag
+  icon.addEventListener('touchstart', (e) => {
+    const touch = e.touches[0];
+    const tStartX = touch.clientX;
+    const tStartY = touch.clientY;
+    const rect = icon.getBoundingClientRect();
+    const tOrigLeft = rect.left;
+    const tOrigTop = rect.top - 24;
+    let moved = false;
+
+    function onTouchMove(e) {
+      const t = e.touches[0];
+      const dx = t.clientX - tStartX;
+      const dy = t.clientY - tStartY;
+      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) {
+        moved = true;
+        e.preventDefault();
+        icon.style.left = (tOrigLeft + dx) + 'px';
+        icon.style.top = (tOrigTop + dy) + 'px';
+        icon.style.right = 'auto';
+        icon.style.bottom = 'auto';
+      }
+    }
+
+    function onTouchEnd(e) {
+      document.removeEventListener('touchmove', onTouchMove);
+      document.removeEventListener('touchend', onTouchEnd);
+      if (moved) {
+        const t = e.changedTouches[0];
+        tryTrashDrop(icon, t.clientX, t.clientY);
+      }
+    }
+
+    document.addEventListener('touchmove', onTouchMove, { passive: false });
+    document.addEventListener('touchend', onTouchEnd);
+  }, { passive: true });
+}
+
+document.querySelectorAll('.desktop-icon').forEach(icon => {
+  makeIconDraggable(icon);
 });
 
 function tryTrashDrop(icon, x, y) {
@@ -401,6 +443,54 @@ function showAlert(message, onOk) {
 const imageFiles = {};
 const imageOrder = [];
 
+// Helper: set up click/dblclick/keyboard/touch-open on a dynamic icon
+function initIconInteractions(icon, fileId) {
+  icon.addEventListener('click', (e) => {
+    e.stopPropagation();
+    selectIcon(icon, e.shiftKey || e.metaKey);
+  });
+  icon.addEventListener('dblclick', (e) => {
+    e.stopPropagation();
+    openFile(fileId);
+  });
+  icon.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openFile(fileId); }
+  });
+  let lastTap = 0;
+  icon.addEventListener('touchend', (e) => {
+    const now = Date.now();
+    if (now - lastTap < 300) { e.preventDefault(); openFile(fileId); }
+    lastTap = now;
+  });
+  makeIconDraggable(icon);
+}
+
+// Responsive icon layout: right-aligned columns, top-to-bottom then next column left
+const dynamicIcons = [];
+
+function layoutDynamicIcons() {
+  const desktopHeight = window.innerHeight - 24; // minus menubar
+  const iconH = 90; // icon height + gap
+  const iconW = 90; // column width
+  const padTop = 20;
+  const padRight = 20;
+  const padBetween = 10;
+
+  const maxPerCol = Math.max(1, Math.floor((desktopHeight - padTop) / iconH));
+
+  dynamicIcons.forEach((icon, i) => {
+    if (icon.classList.contains('trashed')) return;
+    const col = Math.floor(i / maxPerCol);
+    const row = i % maxPerCol;
+    icon.style.top = (padTop + row * iconH) + 'px';
+    icon.style.right = (padRight + col * (iconW + padBetween)) + 'px';
+    icon.style.left = 'auto';
+    icon.style.bottom = 'auto';
+  });
+}
+
+window.addEventListener('resize', layoutDynamicIcons);
+
 // Load photos from photos.yaml and create desktop icons
 fetch('photos.yaml')
   .then(r => r.text())
@@ -425,57 +515,27 @@ fetch('photos.yaml')
       const icon = document.createElement('div');
       icon.className = 'desktop-icon';
       icon.dataset.file = fileId;
-      icon.style.cssText = `top: ${20 + i * 100}px; right: 20px;`;
       icon.setAttribute('tabindex', '0');
       icon.setAttribute('role', 'button');
       icon.setAttribute('aria-label', 'Open ' + name);
 
       icon.innerHTML = `<div class="icon-image"><img src="images/thumb_${filename}" alt="${name}"></div><span class="icon-label">${name}</span>`;
 
-      // Click to select
-      icon.addEventListener('click', (e) => {
-        e.stopPropagation();
-        selectIcon(icon, e.shiftKey || e.metaKey);
-      });
-
-      // Double-click to open
-      icon.addEventListener('dblclick', (e) => {
-        e.stopPropagation();
-        openFile(fileId);
-      });
-
-      // Keyboard open
-      icon.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          openFile(fileId);
-        }
-      });
-
-      // Double-tap to open (touch)
-      let lastTap = 0;
-      icon.addEventListener('touchend', (e) => {
-        const now = Date.now();
-        if (now - lastTap < 300) {
-          e.preventDefault();
-          openFile(fileId);
-        }
-        lastTap = now;
-      });
-
+      initIconInteractions(icon, fileId);
       desktop.appendChild(icon);
+      dynamicIcons.push(icon);
     });
 
     // Init slideshow after photos are loaded
     initSlideshow();
 
     // Load videos after photos so positioning is correct
-    loadVideos(lines.length);
+    loadVideos();
   });
 
 const videoFiles = {};
 
-function loadVideos(photoCount) {
+function loadVideos() {
 // Load videos from videos.yaml and create desktop icons
 fetch('videos.yaml')
   .then(r => r.text())
@@ -503,46 +563,19 @@ fetch('videos.yaml')
       const icon = document.createElement('div');
       icon.className = 'desktop-icon';
       icon.dataset.file = fileId;
-      icon.style.cssText = `top: ${20 + (photoCount + i) * 100}px; right: 20px;`;
       icon.setAttribute('tabindex', '0');
       icon.setAttribute('role', 'button');
       icon.setAttribute('aria-label', 'Play ' + name);
 
       icon.innerHTML = `<div class="icon-image">${videoIconSvg}</div><span class="icon-label" data-full="${name}.mov">${name}.mov</span>`;
 
-      // Click to select
-      icon.addEventListener('click', (e) => {
-        e.stopPropagation();
-        selectIcon(icon, e.shiftKey || e.metaKey);
-      });
-
-      // Double-click to open
-      icon.addEventListener('dblclick', (e) => {
-        e.stopPropagation();
-        openFile(fileId);
-      });
-
-      // Keyboard open
-      icon.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          openFile(fileId);
-        }
-      });
-
-      // Double-tap to open (touch)
-      let lastTap = 0;
-      icon.addEventListener('touchend', (e) => {
-        const now = Date.now();
-        if (now - lastTap < 300) {
-          e.preventDefault();
-          openFile(fileId);
-        }
-        lastTap = now;
-      });
-
+      initIconInteractions(icon, fileId);
       desktop.appendChild(icon);
+      dynamicIcons.push(icon);
     });
+
+    // Layout all dynamic icons after both photos and videos are loaded
+    layoutDynamicIcons();
   });
 }
 
@@ -1150,45 +1183,8 @@ document.addEventListener('touchstart', (e) => {
   document.addEventListener('touchend', onTouchEnd);
 }, { passive: true });
 
-// Touch: drag desktop icons
+// Touch: double-tap to open static icons
 document.querySelectorAll('.desktop-icon').forEach(icon => {
-  icon.addEventListener('touchstart', (e) => {
-    const touch = e.touches[0];
-    const startX = touch.clientX;
-    const startY = touch.clientY;
-    const rect = icon.getBoundingClientRect();
-    const origLeft = rect.left;
-    const origTop = rect.top - 24;
-    let moved = false;
-
-    function onTouchMove(e) {
-      const t = e.touches[0];
-      const dx = t.clientX - startX;
-      const dy = t.clientY - startY;
-      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) {
-        moved = true;
-        e.preventDefault();
-        icon.style.left = (origLeft + dx) + 'px';
-        icon.style.top = (origTop + dy) + 'px';
-        icon.style.right = 'auto';
-        icon.style.bottom = 'auto';
-      }
-    }
-
-    function onTouchEnd(e) {
-      document.removeEventListener('touchmove', onTouchMove);
-      document.removeEventListener('touchend', onTouchEnd);
-      if (moved) {
-        const t = e.changedTouches[0];
-        tryTrashDrop(icon, t.clientX, t.clientY);
-      }
-    }
-
-    document.addEventListener('touchmove', onTouchMove, { passive: false });
-    document.addEventListener('touchend', onTouchEnd);
-  }, { passive: true });
-
-  // Double-tap to open
   let lastTap = 0;
   icon.addEventListener('touchend', (e) => {
     const now = Date.now();
