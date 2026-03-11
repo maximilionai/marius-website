@@ -239,6 +239,16 @@ body {
   opacity: 1;
 }
 
+/* === Marquee Selection === */
+#selection-marquee {
+  display: none;
+  position: absolute;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+  z-index: 50;
+}
+
 /* === Windows === */
 .window {
   position: absolute;

@@ -155,21 +155,34 @@ document.addEventListener('mousedown', (e) => {
 
 // === Desktop Icon Selection & Opening ===
 let selectedIcon = null;
+const selectedIcons = new Set();
+let justMarqueed = false;
+
+function clearSelection() {
+  selectedIcons.forEach(ic => ic.classList.remove('selected'));
+  selectedIcons.clear();
+  selectedIcon = null;
+}
+
+function selectIcon(icon, addToSelection) {
+  if (!addToSelection) clearSelection();
+  icon.classList.add('selected');
+  selectedIcons.add(icon);
+  selectedIcon = icon;
+}
 
 document.addEventListener('click', (e) => {
+  if (justMarqueed) { justMarqueed = false; return; }
   const icon = e.target.closest('.desktop-icon');
   if (!icon && e.target.closest('#desktop') && !e.target.closest('.window')) {
-    if (selectedIcon) selectedIcon.classList.remove('selected');
-    selectedIcon = null;
+    clearSelection();
   }
 });
 
 document.querySelectorAll('.desktop-icon').forEach(icon => {
   icon.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (selectedIcon) selectedIcon.classList.remove('selected');
-    icon.classList.add('selected');
-    selectedIcon = icon;
+    selectIcon(icon, e.shiftKey || e.metaKey);
   });
 
   icon.addEventListener('dblclick', (e) => {
@@ -184,6 +197,88 @@ document.querySelectorAll('.desktop-icon').forEach(icon => {
     }
   });
 });
+
+// === Marquee (Rubber Band) Selection ===
+(function() {
+  const desktop = document.getElementById('desktop');
+  const marquee = document.createElement('div');
+  marquee.id = 'selection-marquee';
+  desktop.appendChild(marquee);
+
+  let isSelecting = false;
+  let startX, startY;
+
+  desktop.addEventListener('mousedown', (e) => {
+    if (e.target.closest('.desktop-icon') || e.target.closest('.window') || e.button !== 0) return;
+
+    isSelecting = true;
+    const desktopRect = desktop.getBoundingClientRect();
+    startX = e.clientX - desktopRect.left;
+    startY = e.clientY - desktopRect.top;
+
+    marquee.style.left = startX + 'px';
+    marquee.style.top = startY + 'px';
+    marquee.style.width = '0';
+    marquee.style.height = '0';
+    marquee.style.display = 'block';
+
+    if (!e.shiftKey && !e.metaKey) clearSelection();
+
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isSelecting) return;
+
+    const desktopRect = desktop.getBoundingClientRect();
+    const currentX = e.clientX - desktopRect.left;
+    const currentY = e.clientY - desktopRect.top;
+
+    const x = Math.min(startX, currentX);
+    const y = Math.min(startY, currentY);
+    const w = Math.abs(currentX - startX);
+    const h = Math.abs(currentY - startY);
+
+    marquee.style.left = x + 'px';
+    marquee.style.top = y + 'px';
+    marquee.style.width = w + 'px';
+    marquee.style.height = h + 'px';
+
+    const marqueeRect = { left: x, top: y, right: x + w, bottom: y + h };
+
+    desktop.querySelectorAll('.desktop-icon').forEach(icon => {
+      const iconRect = icon.getBoundingClientRect();
+      const iconRelRect = {
+        left: iconRect.left - desktopRect.left,
+        top: iconRect.top - desktopRect.top,
+        right: iconRect.right - desktopRect.left,
+        bottom: iconRect.bottom - desktopRect.top,
+      };
+
+      const intersects =
+        marqueeRect.left < iconRelRect.right &&
+        marqueeRect.right > iconRelRect.left &&
+        marqueeRect.top < iconRelRect.bottom &&
+        marqueeRect.bottom > iconRelRect.top;
+
+      if (intersects) {
+        icon.classList.add('selected');
+        selectedIcons.add(icon);
+        selectedIcon = icon;
+      } else if (!e.shiftKey && !e.metaKey) {
+        icon.classList.remove('selected');
+        selectedIcons.delete(icon);
+      }
+    });
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (!isSelecting) return;
+    isSelecting = false;
+    marquee.style.display = 'none';
+    if (selectedIcons.size > 0) justMarqueed = true;
+  });
+})();
 
 // === Dragging Desktop Icons (with trash drop) ===
 const trashedItems = new Set();
@@ -343,9 +438,7 @@ fetch('videos.yaml')
       // Click to select
       icon.addEventListener('click', (e) => {
         e.stopPropagation();
-        if (selectedIcon) selectedIcon.classList.remove('selected');
-        icon.classList.add('selected');
-        selectedIcon = icon;
+        selectIcon(icon, e.shiftKey || e.metaKey);
       });
 
       // Double-click to open
