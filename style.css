@@ -201,17 +201,42 @@ body {
 }
 
 .icon-label {
+  display: block;
   font-size: 10px;
   text-align: center;
   color: #fff;
   padding: 1px 4px;
   max-width: 80px;
-  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
 }
 
 .desktop-icon.selected .icon-label {
   text-shadow: none;
+}
+
+.icon-label[data-full]::after {
+  content: attr(data-full);
+  position: absolute;
+  right: 0;
+  bottom: -18px;
+  background: #ffffcc;
+  color: #000;
+  font-size: 10px;
+  padding: 2px 6px;
+  border: 1px solid #999;
+  border-radius: 2px;
+  white-space: nowrap;
+  text-shadow: none;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 9999;
+}
+
+.desktop-icon:hover .icon-label[data-full]::after {
+  opacity: 1;
 }
 
 /* === Windows === */

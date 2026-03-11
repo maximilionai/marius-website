@@ -304,10 +304,78 @@ const imageFiles = {
   photo5: { title: 'Architecture.jpg', src: 'images/architecture.jpg', thumb: 'images/thumb_architecture.jpg', w: 640, h: 480 },
 };
 
-const videoFiles = {
-  video1: { title: 'Showreel.mov', vimeoId: '1145703168', w: 640, h: 360 },
-  video2: { title: 'BTS.mov', vimeoId: '1066526515', w: 640, h: 360 },
-};
+const videoFiles = {};
+
+// Load videos from videos.yaml and create desktop icons
+fetch('videos.yaml')
+  .then(r => r.text())
+  .then(text => {
+    const desktop = document.getElementById('desktop');
+    const lines = text.trim().split('\n').filter(l => l.trim() && !l.trim().startsWith('#'));
+    const videoIconSvg = `<svg viewBox="0 0 48 48" width="48" height="48">
+      <rect x="2" y="6" width="44" height="36" rx="3" fill="#222" stroke="#555" stroke-width="1.5"/>
+      <rect x="6" y="10" width="36" height="28" fill="#111"/>
+      <polygon points="20,17 20,31 32,24" fill="#fff" opacity="0.8"/>
+      <rect x="6" y="38" width="36" height="4" rx="1" fill="#444"/>
+      <circle cx="12" cy="40" r="1.5" fill="#888"/>
+      <rect x="18" y="39.5" width="16" height="1" rx="0.5" fill="#666"/>
+    </svg>`;
+
+    lines.forEach((line, i) => {
+      const colonIdx = line.indexOf(':');
+      if (colonIdx === -1) return;
+      const name = line.substring(0, colonIdx).trim();
+      const vimeoId = line.substring(colonIdx + 1).trim();
+      const fileId = 'video' + (i + 1);
+
+      videoFiles[fileId] = { title: name + '.mov', vimeoId, w: 640, h: 360 };
+
+      const icon = document.createElement('div');
+      icon.className = 'desktop-icon';
+      icon.dataset.file = fileId;
+      icon.style.cssText = `top: ${520 + i * 100}px; right: 20px;`;
+      icon.setAttribute('tabindex', '0');
+      icon.setAttribute('role', 'button');
+      icon.setAttribute('aria-label', 'Play ' + name);
+
+      icon.innerHTML = `<div class="icon-image">${videoIconSvg}</div><span class="icon-label" data-full="${name}.mov">${name}.mov</span>`;
+
+      // Click to select
+      icon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (selectedIcon) selectedIcon.classList.remove('selected');
+        icon.classList.add('selected');
+        selectedIcon = icon;
+      });
+
+      // Double-click to open
+      icon.addEventListener('dblclick', (e) => {
+        e.stopPropagation();
+        openFile(fileId);
+      });
+
+      // Keyboard open
+      icon.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openFile(fileId);
+        }
+      });
+
+      // Double-tap to open (touch)
+      let lastTap = 0;
+      icon.addEventListener('touchend', (e) => {
+        const now = Date.now();
+        if (now - lastTap < 300) {
+          e.preventDefault();
+          openFile(fileId);
+        }
+        lastTap = now;
+      });
+
+      desktop.appendChild(icon);
+    });
+  });
 
 const imageOrder = ['photo1', 'photo2', 'photo3', 'photo4', 'photo5'];
 let windowCounter = 0;
