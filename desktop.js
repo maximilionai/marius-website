@@ -57,8 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Set clock
   document.getElementById('menubar-clock').textContent = '4:20 PM';
 
-  // Init slideshow filmstrip
-  initSlideshow();
+  // Slideshow init deferred until photos.yaml is loaded
 });
 
 // === Window Management ===
@@ -399,16 +398,84 @@ function showAlert(message, onOk) {
 }
 
 // === File/Image Data ===
-const imageFiles = {
-  photo1: { title: 'Landscape.jpg', src: 'images/landscape.jpg', thumb: 'images/thumb_landscape.jpg', w: 640, h: 480 },
-  photo2: { title: 'Portrait.jpg', src: 'images/portrait.jpg', thumb: 'images/thumb_portrait.jpg', w: 500, h: 600 },
-  photo3: { title: 'Street.jpg', src: 'images/street.jpg', thumb: 'images/thumb_street.jpg', w: 640, h: 420 },
-  photo4: { title: 'Nature.jpg', src: 'images/nature.jpg', thumb: 'images/thumb_nature.jpg', w: 640, h: 480 },
-  photo5: { title: 'Architecture.jpg', src: 'images/architecture.jpg', thumb: 'images/thumb_architecture.jpg', w: 640, h: 480 },
-};
+const imageFiles = {};
+const imageOrder = [];
+
+// Load photos from photos.yaml and create desktop icons
+fetch('photos.yaml')
+  .then(r => r.text())
+  .then(text => {
+    const desktop = document.getElementById('desktop');
+    const lines = text.trim().split('\n').filter(l => l.trim() && !l.trim().startsWith('#'));
+
+    lines.forEach((line, i) => {
+      const filename = line.trim();
+      if (!filename) return;
+      const fileId = 'photo' + (i + 1);
+      const name = filename.charAt(0).toUpperCase() + filename.slice(1);
+
+      imageFiles[fileId] = {
+        title: name,
+        src: 'images/' + filename,
+        thumb: 'images/thumb_' + filename,
+        w: 640, h: 480,
+      };
+      imageOrder.push(fileId);
+
+      const icon = document.createElement('div');
+      icon.className = 'desktop-icon';
+      icon.dataset.file = fileId;
+      icon.style.cssText = `top: ${20 + i * 100}px; right: 20px;`;
+      icon.setAttribute('tabindex', '0');
+      icon.setAttribute('role', 'button');
+      icon.setAttribute('aria-label', 'Open ' + name);
+
+      icon.innerHTML = `<div class="icon-image"><img src="images/thumb_${filename}" alt="${name}"></div><span class="icon-label">${name}</span>`;
+
+      // Click to select
+      icon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        selectIcon(icon, e.shiftKey || e.metaKey);
+      });
+
+      // Double-click to open
+      icon.addEventListener('dblclick', (e) => {
+        e.stopPropagation();
+        openFile(fileId);
+      });
+
+      // Keyboard open
+      icon.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openFile(fileId);
+        }
+      });
+
+      // Double-tap to open (touch)
+      let lastTap = 0;
+      icon.addEventListener('touchend', (e) => {
+        const now = Date.now();
+        if (now - lastTap < 300) {
+          e.preventDefault();
+          openFile(fileId);
+        }
+        lastTap = now;
+      });
+
+      desktop.appendChild(icon);
+    });
+
+    // Init slideshow after photos are loaded
+    initSlideshow();
+
+    // Load videos after photos so positioning is correct
+    loadVideos(lines.length);
+  });
 
 const videoFiles = {};
 
+function loadVideos(photoCount) {
 // Load videos from videos.yaml and create desktop icons
 fetch('videos.yaml')
   .then(r => r.text())
@@ -436,7 +503,7 @@ fetch('videos.yaml')
       const icon = document.createElement('div');
       icon.className = 'desktop-icon';
       icon.dataset.file = fileId;
-      icon.style.cssText = `top: ${520 + i * 100}px; right: 20px;`;
+      icon.style.cssText = `top: ${20 + (photoCount + i) * 100}px; right: 20px;`;
       icon.setAttribute('tabindex', '0');
       icon.setAttribute('role', 'button');
       icon.setAttribute('aria-label', 'Play ' + name);
@@ -477,8 +544,8 @@ fetch('videos.yaml')
       desktop.appendChild(icon);
     });
   });
+}
 
-const imageOrder = ['photo1', 'photo2', 'photo3', 'photo4', 'photo5'];
 let windowCounter = 0;
 
 function openFile(fileId) {
